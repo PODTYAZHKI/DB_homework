@@ -1,19 +1,19 @@
 CREATE TABLE studios(
 	id NUMERIC(6) CHECK (id > 0) PRIMARY KEY,
-	st_name VARCHAR(40) NOT NULL,
+	name VARCHAR(40) NOT NULL,
 	locality VARCHAR(40) NOT NULL,
-	st_index NUMERIC(6) CHECK (index > 0) NOT NULL,
+	index NUMERIC(6) CHECK (index > 0) NOT NULL,
 	address VARCHAR(40) NOT NULL,
-	st_year NUMERIC(6) CHECK (year < EXTRACT(YEAR FROM NOW())) NOT NULL,
+	year NUMERIC(6) CHECK (year < EXTRACT(YEAR FROM NOW())) NOT NULL,
 	phone NUMERIC(11) NOT NULL
 );
 
 CREATE TABLE workers(
 	id NUMERIC(5) CHECK (id > 0) PRIMARY KEY,
-	w_name VARCHAR(40) NOT NULL,
+	name VARCHAR(40) NOT NULL,
 	surname VARCHAR(40) NOT NULL,
 	patronymic VARCHAR(40),
-	birth DATE CHECK(EXTRACT(YEAR FROM birth) <= (EXTRACT(YEAR FROM NOW()) - 16) NOT NULL
+	birth DATE CHECK(EXTRACT(YEAR FROM birth) <= (EXTRACT(YEAR FROM NOW()) - 16)) NOT NULL
 );
 
 CREATE TABLE genres(
@@ -23,12 +23,12 @@ CREATE TABLE genres(
 
 CREATE TABLE positions(
 	id NUMERIC(5) CHECK (id > 0) PRIMARY KEY,
-	p_position VARCHAR(40) NOT NULL
+	position VARCHAR(40) NOT NULL
 );
 
 CREATE TABLE characters(
 	id NUMERIC(5) CHECK (id > 0) PRIMARY KEY,
-	ch_name VARCHAR(40) NOT NULL,
+	name VARCHAR(40) NOT NULL,
 	note VARCHAR(120)
 );
 
@@ -40,34 +40,34 @@ CREATE TABLE worker_phone(
 CREATE TABLE cartoons(
 	id NUMERIC(5) CHECK (id > 0) PRIMARY KEY,
 	studio NUMERIC(5) REFERENCES studios,
-	c_name VARCHAR(40) NOT NULL,
-	c_year NUMERIC(4) NOT NULL
+	name VARCHAR(40) NOT NULL,
+	year NUMERIC(4) NOT NULL
 	
 );
 
 CREATE TABLE series(
 	nomder NUMERIC(4) CHECK (nomder > 0) NOT NULL,
-	cartoon NUMERIC(5) REFERENCES cartoons,
+	cartoon NUMERIC(5) UNIQUE REFERENCES cartoons,
 	season NUMERIC(2) NOT NULL,
-	s_name VARCHAR(40) NOT NULL,
+	name VARCHAR(40) NOT NULL,
 	length NUMERIC(5) CHECK (length > 0) NOT NULL,
-	s_release DATE NOT NULL,
+	release DATE NOT NULL,
 	PRIMARY KEY(nomder, cartoon, season)
 );
 
 CREATE TABLE genres_of_cartoons(
 	cartoon NUMERIC(5) REFERENCES cartoons,
-	genre NUMERIC(5) REFERENCES genre
+	genre NUMERIC(5) REFERENCES genres
 );
 
 CREATE TABLE position_in_series(
-	episode NUMERIC(5) REFERENCES series,
+	episode NUMERIC(5) REFERENCES series(cartoon),
 	worker NUMERIC(5) REFERENCES workers,
-	p_position VARCHAR(40) NOT NULL
+	position VARCHAR(40) NOT NULL
 );
 
 CREATE TABLE voices_of_characters(
-	episode NUMERIC(5) REFERENCES series,
-	v_character NUMERIC(5) REFERENCES characters,
+	episode NUMERIC(5) REFERENCES series(cartoon),
+	character NUMERIC(5) REFERENCES characters,
 	actor NUMERIC(5) REFERENCES workers
 );
