@@ -1,5 +1,5 @@
 CREATE TABLE studios(
-	id numeric(6) CHECK (id > 0) PRIMARY KEY,
+	id NUMERIC(6) CHECK (id > 0) PRIMARY KEY,
 	st_name VARCHAR(40) NOT NULL,
 	locality VARCHAR(40) NOT NULL,
 	st_index NUMERIC(6) CHECK (index > 0) NOT NULL,
