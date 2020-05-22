@@ -1,0 +1,11 @@
+-- DROP TABLE positions;
+-- DROP TABLE workers_phone;
+-- DROP TABLE voices_of_characters;
+-- DROP TABLE genres_of_cartoons;
+-- DROP TABLE position_in_series;
+-- DROP TABLE workers;
+-- DROP TABLE genres;
+DROP TABLE series;
+-- DROP TABLE characters;
+-- DROP TABLE cartoons;
+-- DROP TABLE studios;

@@ -4,7 +4,7 @@ CREATE TABLE studios(
 	locality VARCHAR(40) NOT NULL,
 	index NUMERIC(6) CHECK (index > 0) NOT NULL,
 	address VARCHAR(40) NOT NULL,
-	year NUMERIC(6) CHECK (year < EXTRACT(YEAR FROM NOW())) NOT NULL,
+	year NUMERIC(6) CHECK (year >= 1922 AND year <= 1991) NOT NULL,
 	phone NUMERIC(11) NOT NULL
 );
 
@@ -32,23 +32,23 @@ CREATE TABLE characters(
 	note VARCHAR(120)
 );
 
-CREATE TABLE worker_phone(
+CREATE TABLE workers_phone(
 	actor NUMERIC(5) REFERENCES workers,
-	phone NUMERIC(11) NOT NULL
+	phone NUMERIC(11) CHECK (phone > 0) NOT NULL
 );
 
 CREATE TABLE cartoons(
 	id NUMERIC(5) CHECK (id > 0) PRIMARY KEY,
 	studio NUMERIC(5) REFERENCES studios,
 	name VARCHAR(40) NOT NULL,
-	year NUMERIC(4) NOT NULL
+	year NUMERIC(4) CHECK (year <= 1991) NOT NULL 
 	
 );
 
 CREATE TABLE series(
-	nomder NUMERIC(4) CHECK (nomder > 0) NOT NULL,
-	cartoon NUMERIC(5) UNIQUE REFERENCES cartoons,
-	season NUMERIC(2) NOT NULL,
+	nomder NUMERIC(4) UNIQUE CHECK (nomder > 0) NOT NULL,
+	cartoon NUMERIC(5) REFERENCES cartoons,
+	season NUMERIC(2) CHECK (season > 0) NOT NULL,
 	name VARCHAR(40) NOT NULL,
 	length NUMERIC(5) CHECK (length > 0) NOT NULL,
 	release DATE NOT NULL,
@@ -61,13 +61,13 @@ CREATE TABLE genres_of_cartoons(
 );
 
 CREATE TABLE position_in_series(
-	episode NUMERIC(5) REFERENCES series(cartoon),
+	episode NUMERIC(4) REFERENCES series(nomder),
 	worker NUMERIC(5) REFERENCES workers,
 	position VARCHAR(40) NOT NULL
 );
 
 CREATE TABLE voices_of_characters(
-	episode NUMERIC(5) REFERENCES series(cartoon),
+	episode NUMERIC(4) REFERENCES series(nomder),
 	character NUMERIC(5) REFERENCES characters,
 	actor NUMERIC(5) REFERENCES workers
 );
